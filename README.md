@@ -2,6 +2,6 @@
 
 Hosts `app-ads.txt` for AdMob app verification.
 
-After enabling Gitee Pages, the file should be reachable at:
+Public URL after GitHub Pages is enabled:
 
-`https://lcd10415fake.gitee.io/lingomind/app-ads.txt`
+`https://lcd10415.github.io/lingomind/app-ads.txt`
