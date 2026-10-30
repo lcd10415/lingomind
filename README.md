@@ -1,7 +1,16 @@
-# LingoMind developer site
+# LingoMind — product site
 
-Hosts `app-ads.txt` for AdMob app verification.
+Marketing site for **LingoMind**, published at:
 
-Public URL after GitHub Pages is enabled:
+**https://lcd10415.github.io/lingomind/**
 
-`https://lcd10415.github.io/lingomind/app-ads.txt`
+Also hosts `app-ads.txt` for AdMob seller verification.
+
+## Edit & publish
+
+```bash
+# from this repo
+git add -A && git commit -m "Update site" && git push
+```
+
+GitHub Pages serves the `master` branch root.

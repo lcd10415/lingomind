@@ -3,27 +3,779 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LingoMind</title>
+  <title>LingoMind — See it. Recall it. Use it.</title>
+  <meta name="description" content="LingoMind turns real sentences from your reading into lasting vocabulary. Capture, Sense, Recall, Produce, Verify — local-first language learning." />
+  <meta name="theme-color" content="#0B1F3A" />
+  <link rel="icon" href="assets/icon-256.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/icon-256.png" />
+  <meta property="og:title" content="LingoMind" />
+  <meta property="og:description" content="See it. Recall it. Use it. Vocabulary from real reading — not word lists." />
+  <meta property="og:image" content="assets/icon-256.png" />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    :root { color-scheme: light; }
+    :root {
+      --ink: #0B1F3A;
+      --ink-soft: #3A516E;
+      --paper: #F4F8FC;
+      --paper-2: #E8F1FF;
+      --line: rgba(15, 39, 68, 0.10);
+      --blue: #2F6FED;
+      --blue-deep: #2458C4;
+      --mint: #3ECF9A;
+      --mint-soft: #D8F5EA;
+      --white: #FFFFFF;
+      --shadow: 0 28px 60px rgba(11, 31, 58, 0.18);
+      --radius-phone: 36px;
+      --font-display: "Fraunces", Georgia, serif;
+      --font-body: "Manrope", system-ui, sans-serif;
+      --store: https://apps.apple.com/app/lingomind/id6823518503;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      font-family: "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-      background: linear-gradient(160deg, #e0f2fe 0%, #f8fafc 45%, #ecfeff 100%);
-      color: #0f172a;
+      font-family: var(--font-body);
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
     }
-    main { text-align: center; padding: 2rem; }
-    h1 { margin: 0 0 0.5rem; font-size: 2rem; letter-spacing: -0.03em; }
-    p { margin: 0; color: #475569; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+
+    .wrap {
+      width: min(1120px, calc(100% - 2.5rem));
+      margin-inline: auto;
+    }
+
+    /* —— Top bar —— */
+    .top {
+      position: absolute;
+      inset: 0 0 auto;
+      z-index: 5;
+      padding: 1.1rem 0;
+    }
+    .top-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+    .brand-mark img {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+    }
+    .brand-mark span {
+      font-family: var(--font-display);
+      font-weight: 650;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+      color: var(--white);
+    }
+    .lang {
+      display: inline-flex;
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(8px);
+    }
+    .lang button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: rgba(255,255,255,0.72);
+      font: 600 0.75rem/1 var(--font-body);
+      padding: 0.45rem 0.7rem;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+    }
+    .lang button[aria-pressed="true"] {
+      background: rgba(255,255,255,0.92);
+      color: var(--ink);
+    }
+
+    /* —— Hero —— */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: grid;
+      align-items: end;
+      overflow: hidden;
+      color: var(--white);
+      background:
+        radial-gradient(120% 80% at 80% 10%, rgba(62, 207, 154, 0.28), transparent 55%),
+        radial-gradient(90% 70% at 10% 90%, rgba(47, 111, 237, 0.45), transparent 50%),
+        linear-gradient(165deg, #071526 0%, #0B1F3A 42%, #12335C 100%);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        url("assets/hero-bg.jpg") right 8% center / min(52vw, 520px) auto no-repeat;
+      opacity: 0.18;
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 2rem;
+      align-items: end;
+      padding: 7.5rem 0 3.5rem;
+      width: min(1120px, calc(100% - 2.5rem));
+      margin-inline: auto;
+    }
+    .hero-copy h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 650;
+      font-size: clamp(3rem, 7vw, 5.4rem);
+      letter-spacing: -0.045em;
+      line-height: 0.95;
+    }
+    .hero-copy .tagline {
+      margin: 1.1rem 0 0;
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+      letter-spacing: -0.01em;
+      color: rgba(255,255,255,0.88);
+    }
+    .hero-copy .lead {
+      margin: 0.9rem 0 0;
+      max-width: 28rem;
+      color: rgba(255,255,255,0.68);
+      font-size: 1.02rem;
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 1.75rem;
+      align-items: center;
+    }
+    .btn-store {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      text-decoration: none;
+      background: var(--white);
+      color: var(--ink);
+      border-radius: 14px;
+      padding: 0.7rem 1.05rem 0.7rem 0.85rem;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .btn-store:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 36px rgba(0,0,0,0.28);
+    }
+    .btn-store svg { width: 22px; height: 22px; flex: none; }
+    .btn-store small {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 500;
+      opacity: 0.65;
+      letter-spacing: 0.02em;
+    }
+    .btn-store strong {
+      display: block;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-top: 0.05rem;
+    }
+    .btn-ghost {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.7rem 0.4rem;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+    .btn-ghost:hover {
+      color: var(--white);
+      border-bottom-color: rgba(255,255,255,0.45);
+    }
+
+    .phone {
+      position: relative;
+      width: min(280px, 72vw);
+      margin-inline: auto;
+      border-radius: var(--radius-phone);
+      padding: 10px;
+      background: linear-gradient(160deg, #1a2f4a, #0a1628);
+      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,0.12);
+      transform: translateY(12px);
+      animation: float-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .phone img {
+      border-radius: calc(var(--radius-phone) - 8px);
+      width: 100%;
+      height: auto;
+      background: #0B1F3A;
+    }
+    .phone::after {
+      content: "";
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 78px;
+      height: 18px;
+      border-radius: 999px;
+      background: #050d18;
+      z-index: 2;
+    }
+
+    @keyframes float-in {
+      from { opacity: 0; transform: translateY(40px) scale(0.97); }
+      to { opacity: 1; transform: translateY(12px) scale(1); }
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-copy > * {
+      animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .hero-copy > *:nth-child(1) { animation-delay: 0.05s; }
+    .hero-copy > *:nth-child(2) { animation-delay: 0.15s; }
+    .hero-copy > *:nth-child(3) { animation-delay: 0.25s; }
+    .hero-copy > *:nth-child(4) { animation-delay: 0.35s; }
+
+    /* —— Loop strip —— */
+    .loop {
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      padding: 1.35rem 0;
+    }
+    .loop-track {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.55rem 0.35rem;
+      font-weight: 650;
+      font-size: 0.92rem;
+      letter-spacing: -0.01em;
+    }
+    .loop-track span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background: var(--paper-2);
+      color: var(--blue-deep);
+    }
+    .loop-track i {
+      font-style: normal;
+      color: var(--mint);
+      font-weight: 700;
+      padding: 0 0.15rem;
+    }
+
+    /* —— Sections —— */
+    section.block {
+      padding: clamp(3.5rem, 8vw, 6rem) 0;
+    }
+    section.block.alt {
+      background: linear-gradient(180deg, #EEF5FC 0%, var(--paper) 100%);
+    }
+    .section-head {
+      max-width: 36rem;
+      margin-bottom: 2.5rem;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 650;
+      font-size: clamp(1.85rem, 3.5vw, 2.6rem);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+    .section-head p {
+      margin: 0.75rem 0 0;
+      color: var(--ink-soft);
+      font-size: 1.05rem;
+    }
+
+    .feature {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(1.5rem, 4vw, 3.5rem);
+      align-items: center;
+    }
+    .feature + .feature { margin-top: clamp(3rem, 7vw, 5rem); }
+    .feature.reverse .feature-copy { order: 2; }
+    .feature.reverse .feature-visual { order: 1; }
+    .feature-copy .step {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.6rem;
+    }
+    .feature-copy h3 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.6vw, 2rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+    }
+    .feature-copy p {
+      margin: 0.85rem 0 0;
+      color: var(--ink-soft);
+      max-width: 28rem;
+    }
+    .feature-visual {
+      display: flex;
+      justify-content: center;
+    }
+    .feature-visual .phone {
+      width: min(240px, 58vw);
+      transform: none;
+      animation: none;
+      box-shadow: 0 22px 48px rgba(11, 31, 58, 0.14);
+    }
+    .feature-visual .phone::after { display: none; }
+
+    /* —— Gallery —— */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .gallery figure {
+      margin: 0;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #0B1F3A;
+      box-shadow: 0 16px 40px rgba(11, 31, 58, 0.12);
+      transition: transform 0.35s ease;
+    }
+    .gallery figure:hover { transform: translateY(-4px); }
+    .gallery img { width: 100%; height: auto; }
+    .gallery figcaption {
+      padding: 0.85rem 1rem 1rem;
+      background: var(--white);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+      border-top: 1px solid var(--line);
+    }
+
+    /* —— Privacy —— */
+    .privacy-panel {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 2rem;
+      align-items: center;
+      padding: 2rem;
+      border-radius: 24px;
+      background:
+        radial-gradient(80% 120% at 100% 0%, rgba(62, 207, 154, 0.18), transparent 50%),
+        linear-gradient(135deg, #0B1F3A, #163A66);
+      color: var(--white);
+    }
+    .privacy-panel h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      letter-spacing: -0.03em;
+    }
+    .privacy-panel p {
+      margin: 0.75rem 0 0;
+      color: rgba(255,255,255,0.72);
+      max-width: 32rem;
+    }
+    .privacy-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 0.7rem;
+    }
+    .privacy-list li {
+      display: flex;
+      gap: 0.65rem;
+      align-items: flex-start;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.88);
+    }
+    .privacy-list li::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      margin-top: 0.45rem;
+      border-radius: 50%;
+      background: var(--mint);
+      flex: none;
+    }
+
+    /* —— Final CTA —— */
+    .final {
+      text-align: center;
+      padding: clamp(4rem, 9vw, 6.5rem) 0;
+      background:
+        linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+    }
+    .final h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: -0.035em;
+    }
+    .final p {
+      margin: 0.8rem auto 0;
+      max-width: 28rem;
+      color: var(--ink-soft);
+    }
+    .final .cta-row { justify-content: center; }
+    .final .btn-store {
+      background: var(--blue);
+      color: var(--white);
+    }
+    .final .btn-store:hover { background: var(--blue-deep); }
+
+    footer {
+      padding: 1.5rem 0 2.2rem;
+      border-top: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-size: 0.85rem;
+    }
+    .foot-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.5rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer a {
+      color: var(--ink-soft);
+      text-decoration: none;
+    }
+    footer a:hover { color: var(--blue); }
+
+    [data-lang="zh"] .en { display: none !important; }
+    [data-lang="en"] .zh { display: none !important; }
+
+    @media (max-width: 860px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        padding-top: 6.5rem;
+        padding-bottom: 2rem;
+        text-align: center;
+      }
+      .hero-copy .lead { margin-inline: auto; }
+      .cta-row { justify-content: center; }
+      .hero::before {
+        opacity: 0.12;
+        background-position: center top;
+        background-size: 70vw;
+      }
+      .phone { margin-top: 0.5rem; }
+      .feature,
+      .feature.reverse {
+        grid-template-columns: 1fr;
+      }
+      .feature.reverse .feature-copy,
+      .feature.reverse .feature-visual {
+        order: unset;
+      }
+      .feature-copy { text-align: center; }
+      .feature-copy p { margin-inline: auto; }
+      .gallery { grid-template-columns: 1fr 1fr; }
+      .privacy-panel {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+      }
+    }
+    @media (max-width: 520px) {
+      .gallery { grid-template-columns: 1fr; max-width: 280px; margin-inline: auto; }
+      .wrap { width: min(1120px, calc(100% - 1.5rem)); }
+      .hero-grid { width: min(1120px, calc(100% - 1.5rem)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
   </style>
 </head>
-<body>
-  <main>
-    <h1>LingoMind</h1>
-    <p>See it. Recall it. Use it.</p>
-  </main>
+<body data-lang="en">
+  <header class="hero" id="top">
+    <div class="top">
+      <div class="wrap top-inner">
+        <a class="brand-mark" href="#top" aria-label="LingoMind">
+          <img src="assets/icon-256.png" width="36" height="36" alt="" />
+          <span>LingoMind</span>
+        </a>
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-set-lang="zh" aria-pressed="false">中文</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <h1>LingoMind</h1>
+        <p class="tagline">
+          <span class="en">See it. Recall it. Use it.</span>
+          <span class="zh">看见 · 回忆 · 使用</span>
+        </p>
+        <p class="lead">
+          <span class="en">Capture real sentences while you read. Turn context into vocabulary that sticks — through recall and your own writing.</span>
+          <span class="zh">阅读时采集真实句子，用回忆与产出把语境变成牢固的词汇能力。</span>
+        </p>
+        <div class="cta-row">
+          <a class="btn-store" href="https://apps.apple.com/app/lingomind/id6823518503" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.22-2.01 1.08-3.17-1.05.05-2.31.7-3.06 1.58-.67.78-1.26 2.02-1.1 3.21 1.16.09 2.35-.6 3.08-1.62"/></svg>
+            <span>
+              <small class="en">Download on the</small>
+              <small class="zh">前往</small>
+              <strong class="en">App Store</strong>
+              <strong class="zh">App Store</strong>
+            </span>
+          </a>
+          <a class="btn-ghost" href="#features">
+            <span class="en">See how it works</span>
+            <span class="zh">了解工作方式</span>
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="phone">
+          <img src="assets/phone-1.jpg" width="415" height="900" alt="" fetchpriority="high" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="loop" aria-hidden="true">
+    <div class="wrap loop-track">
+      <span><span class="en">Capture</span><span class="zh">采集</span></span><i>→</i>
+      <span><span class="en">Sense</span><span class="zh">理解</span></span><i>→</i>
+      <span><span class="en">Recall</span><span class="zh">回忆</span></span><i>→</i>
+      <span><span class="en">Produce</span><span class="zh">产出</span></span><i>→</i>
+      <span><span class="en">Verify</span><span class="zh">验证</span></span>
+    </div>
+  </div>
+
+  <section class="block" id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>
+          <span class="en">Built for how memory actually works</span>
+          <span class="zh">按记忆真正运作的方式设计</span>
+        </h2>
+        <p>
+          <span class="en">Not another flashcard pile. A short daily loop that starts from sentences you chose yourself.</span>
+          <span class="zh">不是又一堆闪卡。每天短循环，从你自己选中的句子开始。</span>
+        </p>
+      </div>
+
+      <article class="feature">
+        <div class="feature-copy">
+          <div class="step">01 · Capture</div>
+          <h3>
+            <span class="en">Save sentences from real reading</span>
+            <span class="zh">从真实阅读中采集句子</span>
+          </h3>
+          <p>
+            <span class="en">Paste from clipboard, type an idiom, or snap a photo with on-device OCR. Context stays with the expression — the way you first met it.</span>
+            <span class="zh">粘贴剪贴板、手输习语，或用设备端 OCR 拍照。语境与表达一起保存——就是你初次遇见它的样子。</span>
+          </p>
+        </div>
+        <div class="feature-visual">
+          <div class="phone"><img src="assets/phone-2.jpg" width="415" height="900" alt="Capture screen" loading="lazy" /></div>
+        </div>
+      </article>
+
+      <article class="feature reverse">
+        <div class="feature-copy">
+          <div class="step">02 · Sense &amp; Recall</div>
+          <h3>
+            <span class="en">Understand, then actively recall</span>
+            <span class="zh">先理解，再主动回忆</span>
+          </h3>
+          <p>
+            <span class="en">Sense the meaning in context, then prove you remember it. Spaced stages move expressions from Active Recall to Reinforced to Mastered.</span>
+            <span class="zh">在语境中理解含义，再证明你记得住。间隔复习把表达从主动回忆推进到巩固与掌握。</span>
+          </p>
+        </div>
+        <div class="feature-visual">
+          <div class="phone"><img src="assets/phone-3.jpg" width="415" height="900" alt="Learn and recall" loading="lazy" /></div>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div class="feature-copy">
+          <div class="step">03 · Produce &amp; Verify</div>
+          <h3>
+            <span class="en">Write your own sentence</span>
+            <span class="zh">写出属于你的句子</span>
+          </h3>
+          <p>
+            <span class="en">Production cements usage. Draft an original sentence, then verify collocation and tone when you are ready — optional AI feedback, always on your terms.</span>
+            <span class="zh">产出才能把用法钉牢。起草原句，再按需验证搭配与语气——可选 AI 反馈，节奏由你掌控。</span>
+          </p>
+        </div>
+        <div class="feature-visual">
+          <div class="phone"><img src="assets/phone-5.jpg" width="415" height="900" alt="Produce screen" loading="lazy" /></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="block alt" id="gallery">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>
+          <span class="en">Today, library, and progress at a glance</span>
+          <span class="zh">今日、词库与进度一目了然</span>
+        </h2>
+        <p>
+          <span class="en">A calm daily desk: what is due, what you captured, and how memory is shifting.</span>
+          <span class="zh">安静的每日书桌：待复习、已采集，以及记忆状态如何变化。</span>
+        </p>
+      </div>
+      <div class="gallery">
+        <figure>
+          <img src="assets/phone-1.jpg" width="415" height="900" alt="" loading="lazy" />
+          <figcaption>
+            <span class="en">Today — due reviews &amp; captures</span>
+            <span class="zh">今日 — 待复习与新采集</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="assets/phone-4.jpg" width="415" height="900" alt="" loading="lazy" />
+          <figcaption>
+            <span class="en">Expression cards with context</span>
+            <span class="zh">带语境的表达卡片</span>
+          </figcaption>
+        </figure>
+        <figure>
+          <img src="assets/phone-6.jpg" width="415" height="900" alt="" loading="lazy" />
+          <figcaption>
+            <span class="en">Progress, streak &amp; memory stats</span>
+            <span class="zh">进度、连续天数与记忆统计</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="privacy">
+    <div class="wrap">
+      <div class="privacy-panel">
+        <div>
+          <h2>
+            <span class="en">Local-first by design</span>
+            <span class="zh">本地优先，天生如此</span>
+          </h2>
+          <p>
+            <span class="en">Capture, Sense, Recall, Produce, and Verify run on your device. Your reading stays yours.</span>
+            <span class="zh">采集、理解、回忆、产出、验证均在设备本地运行。你的阅读内容只属于你。</span>
+          </p>
+        </div>
+        <ul class="privacy-list">
+          <li>
+            <span class="en">Clipboard is read only when you tap paste</span>
+            <span class="zh">仅在你点击粘贴时读取剪贴板</span>
+          </li>
+          <li>
+            <span class="en">Photos and OCR stay on-device</span>
+            <span class="zh">照片与 OCR 均在本机处理</span>
+          </li>
+          <li>
+            <span class="en">iCloud sync optional — off by default</span>
+            <span class="zh">iCloud 同步可选，默认关闭</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" id="download">
+    <div class="wrap">
+      <h2>
+        <span class="en">Start with one sentence</span>
+        <span class="zh">从一句话开始</span>
+      </h2>
+      <p>
+        <span class="en">A few minutes a day. Vocabulary from the language you actually read and write.</span>
+        <span class="zh">每天几分钟。词汇来自你真正在读、在写的语言。</span>
+      </p>
+      <div class="cta-row">
+        <a class="btn-store" href="https://apps.apple.com/app/lingomind/id6823518503" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.22-2.01 1.08-3.17-1.05.05-2.31.7-3.06 1.58-.67.78-1.26 2.02-1.1 3.21 1.16.09 2.35-.6 3.08-1.62"/></svg>
+          <span>
+            <small class="en">Available on the</small>
+            <small class="zh">现已上架</small>
+            <strong>App Store</strong>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap foot-inner">
+      <div>© <span id="y"></span> LingoMind · Chengdu Fuzewanxing Technology Co., Ltd.</div>
+      <div>
+        <a href="https://apps.apple.com/app/lingomind/id6823518503">App Store</a>
+        ·
+        <a href="mailto:lcd10415@163.com">Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var root = document.body;
+      var buttons = document.querySelectorAll("[data-set-lang]");
+      var saved = localStorage.getItem("lm-lang");
+      if (!saved) {
+        saved = (navigator.language || "").toLowerCase().startsWith("zh") ? "zh" : "en";
+      }
+      function setLang(lang) {
+        root.setAttribute("data-lang", lang);
+        localStorage.setItem("lm-lang", lang);
+        document.documentElement.lang = lang === "zh" ? "zh-Hans" : "en";
+        buttons.forEach(function (b) {
+          b.setAttribute("aria-pressed", b.getAttribute("data-set-lang") === lang ? "true" : "false");
+        });
+      }
+      setLang(saved);
+      buttons.forEach(function (b) {
+        b.addEventListener("click", function () {
+          setLang(b.getAttribute("data-set-lang"));
+        });
+      });
+      document.getElementById("y").textContent = String(new Date().getFullYear());
+    })();
+  </script>
 </body>
 </html>
